@@ -4,8 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { getProjects, createProject, getSessionProfile } from "@/lib/vault.functions";
 import { AetherCompactLogo } from "@/components/brand/logo";
+import { requireUserRoute } from "@/lib/route-guards";
 
-export const Route = createFileRoute("/dashboard")({ component: DashboardPage });
+export const Route = createFileRoute("/dashboard")({ beforeLoad: requireUserRoute, component: DashboardPage });
 
 type Project = Awaited<ReturnType<typeof getProjects>>[number];
 
