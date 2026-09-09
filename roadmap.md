@@ -1,53 +1,75 @@
 # Aether Code Vault — Build Roadmap
 
 ## Phase 0 — Infrastructure
-- [ ] Enable Lovable Cloud (database, auth, storage)
-- [ ] Schema: profiles, user_roles, projects, project_nodes, snapshots, snapshot_entries, audit_events, mcp_clients, mcp_tokens
-- [ ] Private storage bucket for file contents + snapshot archives
-- [ ] Grants + RLS on every table
+- [x] Database/auth/storage foundation exists
+- [x] Schema foundation: profiles, user_roles, projects, project_nodes, snapshots, snapshot_entries, activity/audit records, mcp_clients
+- [x] Private storage foundation
+- [x] Grants/RLS and project isolation foundation
 
 ## Phase 1 — Design system & brand
-- [ ] Aether design tokens in src/styles.css (dark vault aesthetic, no purple)
-- [ ] Original logo mark / wordmark / app icon / favicon
-- [ ] Shared UI primitives + motion helpers (reduced motion respected)
+- [x] Aether design tokens and dark vault aesthetic
+- [x] Original logo mark / wordmark / app identity
+- [x] Motion helpers with reduced-motion support
 
 ## Phase 2 — Landing page
-- [ ] Hero, product intro, workspace, security, versioning, MCP/AI, features, privacy, vision, final CTA, footer
+- [x] Hero, product introduction, workspace preview, security, versioning, MCP/AI, features, final CTA and footer
 
 ## Phase 3 — Auth
-- [ ] /login /signup /forgot-password /reset-password
-- [ ] Auth gate for _authenticated subtree
-- [ ] Server-side identity in all server functions
+- [x] /login /signup /forgot-password /reset-password
+- [ ] Client-side route guards on every protected page
+- [x] Server-side identity in private server functions
 
 ## Phase 4 — Domain services (server)
-- [ ] AuthorizationService, AuditService, SecurityService
-- [ ] ProjectService, FileService, SearchService, SnapshotService, ArchiveService
-- [ ] Repositories + provider abstraction (DatabaseProvider / ObjectStorageProvider)
+- [x] AuthorizationService, AuditService, SecurityService
+- [x] Project/File/Snapshot foundations
+- [ ] Complete ArchiveService abstraction and provider interfaces
 
 ## Phase 5 — Dashboard & projects
-- [ ] /dashboard, /projects, /projects/:id, real metrics, empty states
-- [ ] Create / rename / archive / delete / export
+- [x] Dashboard with real project data and real metrics
+- [x] Project workspace route
+- [ ] Rename / archive / delete project controls
 
 ## Phase 6 — Workspace
-- [ ] /projects/:id/workspace: Monaco, explorer, tabs, save, unsaved state, search
-- [ ] File & folder CRUD, rename, move, validation
+- [x] Monaco editor, explorer, tabs, save, unsaved state and filename search
+- [x] Real file/folder creation and persistence
+- [ ] File/folder rename, move and delete UI
+- [ ] Full code search across file contents
 
 ## Phase 7 — Snapshots
-- [ ] /projects/:id/snapshots: create, list, compare, restore (non-destructive history)
+- [x] Create and list snapshots
+- [x] Restore creates a new restore history entry
+- [ ] Snapshot compare/diff UI
+- [ ] Final non-destructive restore verification pass
 
 ## Phase 8 — Archives
-- [ ] ZIP import with full safety validation
-- [ ] ZIP export
+- [x] Real ZIP import/export
+- [x] Path traversal and unsafe-path checks
+- [ ] Deeper archive bomb/compression-ratio enforcement and deployed acceptance tests
 
 ## Phase 9 — Admin
-- [ ] /admin/login separate experience, platform_owner bootstrap via server secrets
-- [ ] /admin overview, users, projects, storage, activity, security, mcp, system, settings
+- [x] Separate /admin/login
+- [x] Server-enforced administrator authorization
+- [x] Platform-owner bootstrap using server-only ADMIN_EMAIL
+- [x] Overview, users and projects views
+- [ ] Storage, security, system and settings views
+- [ ] Full admin action controls with audit coverage
 
 ## Phase 10 — Real MCP
-- [ ] Streamable HTTP MCP endpoint with official SDK
-- [ ] Token auth, project-scoped permissions, read tools + guarded write tools
-- [ ] Audit every MCP operation
+- [x] Official MCP SDK v2 and Streamable HTTP / createMcpHandler endpoint
+- [x] Hashed bearer credentials with expiration/revocation
+- [x] Project-scoped permissions
+- [x] Read tools and MCP operation auditing
+- [ ] Guarded write tools
+- [ ] MCP inspector/client acceptance tests
 
 ## Phase 11 — Verification
-- [ ] Browser-driven acceptance tests (user, security, admin, MCP)
-- [ ] Docs: architecture, setup, env example
+- [x] Build/lint CI workflow added
+- [x] Architecture, MCP and environment documentation
+- [ ] Browser-driven acceptance tests against deployed infrastructure
+- [ ] Security regression pass
+
+## Next implementation pass
+1. Finish protected-route guards and project/file rename/move/delete.
+2. Add code-content search and snapshot compare.
+3. Complete admin storage/security/system/settings views.
+4. Run deployed build/lint/browser/MCP verification before exposing write tools.
