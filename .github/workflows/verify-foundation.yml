@@ -1,0 +1,17 @@
+name: Verify Aether Code Vault
+on:
+  push:
+    branches: [feature/complete-code-vault-foundation]
+  pull_request:
+    branches: [main]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.21
+      - run: bun install
+      - run: bun run build
+      - run: bun run lint
