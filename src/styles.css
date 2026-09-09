@@ -2,30 +2,33 @@
 @source "../src";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
 /*
- * Design system definition.
+ * ============================================================
+ * AETHER CODE VAULT — DESIGN SYSTEM
+ * ============================================================
+ * A single source of truth for the product's visual language.
  *
- * The @theme inline block maps CSS custom properties to Tailwind utility
- * classes (e.g. --color-primary -> bg-primary, text-primary).
+ * Concept: an obsidian vault lit from within. Deep graphite-blue
+ * surfaces, precise hairline borders, one cold luminous "aether"
+ * accent, and a restrained brass accent for archival/versioned
+ * states. No decoration without purpose.
  *
- * The :root and .dark blocks define the actual color values using oklch.
- * All colors MUST use oklch format.
- *
- * To add a new semantic color:
- * 1. Add the variable to :root (light value) and .dark (dark value)
- * 2. Register it in @theme inline as --color-<name>: var(--<name>)
+ * All colour values are oklch. Components must consume the
+ * semantic tokens below, never raw colour utilities.
  */
 
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --radius-sm: calc(var(--radius) - 3px);
+  --radius-md: calc(var(--radius) - 1px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  --radius-2xl: calc(var(--radius) + 10px);
+  --radius-3xl: calc(var(--radius) + 18px);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -42,10 +45,21 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-brass: var(--brass);
+  --color-brass-foreground: var(--brass-foreground);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-ring-offset-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-editor: var(--editor);
+  --color-editor-gutter: var(--editor-gutter);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -59,77 +73,84 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  --shadow-panel: 0 1px 0 0 oklch(1 0 0 / 4%) inset, 0 24px 60px -30px oklch(0 0 0 / 65%);
+  --shadow-lift: 0 1px 0 0 oklch(1 0 0 / 5%) inset, 0 12px 32px -18px oklch(0 0 0 / 70%);
+  --shadow-glow: 0 0 0 1px oklch(0.78 0.13 195 / 22%), 0 12px 44px -16px oklch(0.78 0.13 195 / 28%);
+
+  --ease-vault: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
+  --radius: 0.5rem;
+
+  /* Base surfaces — obsidian graphite with a cold blue cast */
+  --background: oklch(0.155 0.012 254);
+  --foreground: oklch(0.949 0.006 250);
+  --surface-sunken: oklch(0.132 0.012 254);
+  --surface: oklch(0.185 0.013 254);
+  --surface-raised: oklch(0.215 0.014 254);
+
+  --card: oklch(0.185 0.013 254);
+  --card-foreground: oklch(0.949 0.006 250);
+  --popover: oklch(0.205 0.014 254);
+  --popover-foreground: oklch(0.949 0.006 250);
+
+  /* Aether — the single luminous accent */
+  --primary: oklch(0.792 0.128 196);
+  --primary-foreground: oklch(0.16 0.02 240);
+
+  --secondary: oklch(0.245 0.015 254);
+  --secondary-foreground: oklch(0.92 0.007 250);
+
+  --muted: oklch(0.225 0.013 254);
+  --muted-foreground: oklch(0.665 0.017 254);
+
+  --accent: oklch(0.265 0.02 250);
+  --accent-foreground: oklch(0.949 0.006 250);
+
+  /* Brass — archives, snapshots, versioned history */
+  --brass: oklch(0.79 0.108 82);
+  --brass-foreground: oklch(0.18 0.02 60);
+
+  --destructive: oklch(0.63 0.196 24);
+  --destructive-foreground: oklch(0.98 0.005 250);
+  --success: oklch(0.735 0.135 155);
+  --success-foreground: oklch(0.16 0.02 160);
+  --warning: oklch(0.79 0.13 72);
+  --warning-foreground: oklch(0.18 0.02 60);
+
+  --border: oklch(1 0 0 / 9%);
+  --border-strong: oklch(1 0 0 / 16%);
+  --input: oklch(1 0 0 / 13%);
+  --ring: oklch(0.792 0.128 196 / 55%);
+
+  --editor: oklch(0.148 0.012 254);
+  --editor-gutter: oklch(0.5 0.014 254);
+
+  --chart-1: oklch(0.792 0.128 196);
+  --chart-2: oklch(0.79 0.108 82);
+  --chart-3: oklch(0.735 0.135 155);
+  --chart-4: oklch(0.68 0.09 254);
+  --chart-5: oklch(0.63 0.196 24);
+
+  --sidebar: oklch(0.168 0.012 254);
+  --sidebar-foreground: oklch(0.9 0.007 250);
+  --sidebar-primary: oklch(0.792 0.128 196);
+  --sidebar-primary-foreground: oklch(0.16 0.02 240);
+  --sidebar-accent: oklch(0.235 0.015 254);
+  --sidebar-accent-foreground: oklch(0.949 0.006 250);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.792 0.128 196 / 55%);
 }
 
+/*
+ * Aether Code Vault ships a single, deliberate dark identity.
+ * The .dark class is mapped to the same tokens so any shadcn
+ * component authored for dark mode stays visually consistent.
+ */
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+  color-scheme: dark;
 }
 
 @layer base {
@@ -137,8 +158,188 @@
     border-color: var(--color-border);
   }
 
+  html {
+    color-scheme: dark;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv05", "ss01";
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+
+  code,
+  pre,
+  kbd,
+  samp {
+    font-family: var(--font-mono);
+  }
+
+  ::selection {
+    background-color: oklch(0.792 0.128 196 / 28%);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: oklch(1 0 0 / 10%);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(1 0 0 / 18%);
+    background-clip: content-box;
+  }
+}
+
+/* ---------------- structural utilities ---------------- */
+
+@utility vault-grid {
+  /* Precise engineering grid, used sparingly behind hero surfaces */
+  background-image:
+    linear-gradient(to right, oklch(1 0 0 / 3.5%) 1px, transparent 1px),
+    linear-gradient(to bottom, oklch(1 0 0 / 3.5%) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+@utility vault-aura {
+  /* Single soft light source; not a decorative gradient wash */
+  background-image: radial-gradient(
+    60% 55% at 50% 0%,
+    oklch(0.792 0.128 196 / 13%) 0%,
+    transparent 70%
+  );
+}
+
+@utility hairline-top {
+  box-shadow: inset 0 1px 0 0 oklch(1 0 0 / 7%);
+}
+
+@utility panel {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+@utility panel-raised {
+  background-color: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lift);
+}
+
+@utility text-gradient-aether {
+  background-image: linear-gradient(
+    100deg,
+    oklch(0.98 0.005 250) 0%,
+    oklch(0.9 0.05 200) 55%,
+    oklch(0.792 0.128 196) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility numeric {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+}
+
+/* ---------------- motion ---------------- */
+
+@keyframes aether-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes aether-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes aether-scan {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(340%);
+    opacity: 0;
+  }
+}
+
+@keyframes aether-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@utility animate-rise {
+  animation: aether-rise 0.7s var(--ease-vault) both;
+}
+
+@utility animate-fade-in {
+  animation: aether-fade 0.6s var(--ease-vault) both;
+}
+
+@utility animate-scan {
+  animation: aether-scan 4.5s linear infinite;
+}
+
+@utility animate-beacon {
+  animation: aether-pulse 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }
