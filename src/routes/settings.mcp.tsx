@@ -3,8 +3,9 @@ import { Check, Copy, KeyRound, Plus, Shield, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createMcpClient, getMcpClients, getProjects, revokeMcpClient } from "@/lib/vault.functions";
 import { AetherCompactLogo } from "@/components/brand/logo";
+import { requireUserRoute } from "@/lib/route-guards";
 
-export const Route = createFileRoute("/settings/mcp")({ component: McpSettings });
+export const Route = createFileRoute("/settings/mcp")({ beforeLoad: requireUserRoute, component: McpSettings });
 const scopes=[{id:"project.read",label:"Project read",detail:"Project metadata and file listings"},{id:"project.search",label:"Project search",detail:"Filename/path search"},{id:"file.read",label:"File read",detail:"Read authorized text files"}];
 function McpSettings(){const [clients,setClients]=useState<Awaited<ReturnType<typeof getMcpClients>>>([]);const [projects,setProjects]=useState<Awaited<ReturnType<typeof getProjects>>>([]);const [name,setName]=useState("");const [description,setDescription]=useState("");const [selectedScopes,setSelectedScopes]=useState(["project.read","project.search","file.read"]);const [selectedProjects,setSelectedProjects]=useState<string[]>([]);const [days,setDays]=useState(90);const [show,setShow]=useState(false);const [token,setToken]=useState("");const [error,setError]=useState("");const [busy,setBusy]=useState(false);
 useEffect(()=>{Promise.all([getMcpClients(),getProjects()]).then(([c,p])=>{setClients(c);setProjects(p);}).catch(e=>setError(e instanceof Error?e.message:"Could not load MCP settings."));},[]);
