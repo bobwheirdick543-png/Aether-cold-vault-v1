@@ -10,13 +10,14 @@ export async function requireUserRoute() {
 }
 
 export async function requireAdminRoute() {
+  let me: Awaited<ReturnType<typeof getSessionProfile>>;
   try {
-    const me = await getSessionProfile();
-    if (!me.roles.some((role) => ['admin', 'platform_owner', 'super_admin'].includes(role))) {
-      throw redirect({ to: '/admin/login' });
-    }
-  } catch (error) {
-    if (error && typeof error === 'object' && 'to' in error) throw error;
+    me = await getSessionProfile();
+  } catch {
+    throw redirect({ to: '/admin/login' });
+  }
+
+  if (!me.roles.some((role) => ['admin', 'platform_owner', 'super_admin'].includes(role))) {
     throw redirect({ to: '/admin/login' });
   }
 }
