@@ -1,7 +1,7 @@
 name: Verify Aether Code Vault
 on:
   push:
-    branches: [feature/complete-code-vault-foundation, feature/code-vault-next-pass]
+    branches: [main, feature/complete-code-vault-foundation, feature/code-vault-next-pass]
   pull_request:
     branches: [main, feature/complete-code-vault-foundation]
 jobs:
