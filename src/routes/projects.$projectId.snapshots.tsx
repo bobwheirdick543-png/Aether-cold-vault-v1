@@ -3,8 +3,9 @@ import { ArrowLeft, ArchiveRestore, Camera, History, ShieldCheck } from "lucide-
 import { useEffect, useState } from "react";
 import { createSnapshot, getProject, getSnapshots, restoreSnapshot } from "@/lib/vault.functions";
 import { AetherCompactLogo } from "@/components/brand/logo";
+import { requireUserRoute } from "@/lib/route-guards";
 
-export const Route = createFileRoute("/projects/$projectId/snapshots")({ component: SnapshotsPage });
+export const Route = createFileRoute("/projects/$projectId/snapshots")({ beforeLoad: requireUserRoute, component: SnapshotsPage });
 
 function SnapshotsPage() { const {projectId}=Route.useParams(); const [project,setProject]=useState<Awaited<ReturnType<typeof getProject>>|null>(null); const [snapshots,setSnapshots]=useState<Awaited<ReturnType<typeof getSnapshots>>>([]); const [busy,setBusy]=useState(false); const [label,setLabel]=useState(""); const [message,setMessage]=useState(""); const [error,setError]=useState("");
   async function load(){try{const [p,s]=await Promise.all([getProject({data:{projectId}}),getSnapshots({data:{projectId}})]);setProject(p);setSnapshots(s);}catch(e){setError(e instanceof Error?e.message:"Could not load snapshots.");}}
