@@ -1,50 +1,35 @@
-# Aether Code Vault MCP
+# Aether Code Vault — MCP
 
 ## Endpoint
 
-`POST /mcp` and the protocol's supported HTTP request methods are handled by TanStack Start's server-route boundary. Requests must carry a valid Bearer credential.
+`POST/GET /mcp` — official Model Context Protocol (Streamable HTTP) via `@modelcontextprotocol/server` v2.
 
-The implementation uses the official Model Context Protocol TypeScript SDK v2. The current SDK v2 line implements the 2026-07-28 protocol revision. The HTTP entry is `createMcpHandler`; legacy HTTP+SSE is not used.
+Compatible with **ChatGPT**, **Claude**, and **Grok** MCP clients using Bearer authentication.
 
-## Credential model
+## Auth
 
-A user creates a credential from `/settings/mcp`.
+1. In the app: **Settings → MCP** → issue a credential.
+2. Grant scopes (read and/or write) and optional project scope.
+3. Copy the one-time token (`acv_...`).
+4. Configure the AI client:
+   - **URL:** `https://<your-domain>/mcp`
+   - **Header:** `Authorization: Bearer acv_...`
 
-The raw credential is generated once, displayed once, and never persisted. The database stores only its SHA-256 hash, prefix, owner, scopes, project scope, expiration and revocation state.
+Tokens are stored only as SHA-256 hashes. Revocation is immediate.
 
-Current scopes:
+## Platform owner
 
-- `project.read`
-- `project.search`
-- `file.read`
+The platform owner is the existing account **peacechloe96@gmail.com**.
+Set server secret `ADMIN_EMAIL=peacechloe96@gmail.com` (never expose to the browser).
 
-A credential may be restricted to specific project IDs. An empty project scope means all projects owned by the credential owner.
+## Tools (scoped)
 
-## Tools
+Read: `list_projects`, `get_project`, `get_project_tree`, `list_files`, `get_file_metadata`, `read_file`, `search_files`, `search_code`, `get_snapshot`, `compare_snapshots`
 
-### `list_projects`
-Returns project metadata visible to the credential.
+Write: `create_file`, `update_file`, `create_folder`, `rename_file`, `move_file`, `delete_file`, `create_snapshot`, `restore_snapshot`
 
-### `get_project`
-Returns metadata for one authorized project.
+Only tools matching the client’s granted scopes are registered. All operations use the same domain services, authorization, sensitivity policy, and audit path as the web UI.
 
-### `list_files`
-Returns real file/folder metadata from the project's filesystem.
+## Architecture
 
-### `read_file`
-Returns the real stored file contents after the normal sensitive-file policy and authorization checks.
-
-### `search_files`
-Searches real project paths and filenames.
-
-## Security boundary
-
-MCP does not receive direct database or object-storage access. Tool handlers call the same vault authorization/domain services used by the application. Each operation is audited.
-
-Write tools are deliberately withheld until the read-only connection has passed acceptance tests. Future writes must follow:
-
-`authenticate → identify client → verify project scope → verify permission → sensitive-file policy → optional approval → safety snapshot → apply → audit`
-
-## Aether AI Platform integration
-
-The Code Vault and Aether AI Platform remain separate applications. A future MCP-to-MCP bridge can allow a Code Vault agent to collect authorized research and publish a structured knowledge artifact to the Aether AI Platform. PDF should be treated as an export format, not the primary system-to-system transport.
+`AI client → MCP (/mcp) → bearer verify → scopes + project scope → domain services → Postgres + private storage`
